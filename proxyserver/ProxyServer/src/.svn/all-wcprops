@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/14/trunk/ProxyServer/src
+END
+HTTPPack.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/12/trunk/ProxyServer/src/HTTPPack.cpp
+END
+ThreadManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/13/trunk/ProxyServer/src/ThreadManager.cpp
+END
+HTTPPack.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/12/trunk/ProxyServer/src/HTTPPack.h
+END
+ThreadManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/13/trunk/ProxyServer/src/ThreadManager.h
+END
+ProxyServer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/14/trunk/ProxyServer/src/ProxyServer.cpp
+END
+ProxyServer.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/14/trunk/ProxyServer/src/ProxyServer.h
+END

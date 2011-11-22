@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/12/trunk/ProxyServer/src/Test
+END
+HTTPPackTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/12/trunk/ProxyServer/src/Test/HTTPPackTest.cpp
+END
+SocketManagerTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/12/trunk/ProxyServer/src/Test/SocketManagerTest.cpp
+END

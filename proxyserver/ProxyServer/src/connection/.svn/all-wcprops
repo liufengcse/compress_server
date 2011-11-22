@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/13/trunk/ProxyServer/src/connection
+END
+SocketManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/13/trunk/ProxyServer/src/connection/SocketManager.cpp
+END
+SocketManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/13/trunk/ProxyServer/src/connection/SocketManager.h
+END

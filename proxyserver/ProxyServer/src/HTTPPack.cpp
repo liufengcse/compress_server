@@ -32,7 +32,7 @@ namespace proxyserver
 			&& scanCount <= totalLen)
 		{	
 			// special HTTP server port
-			if (hostNameBuf[scanCount] == ':')
+			if (hostNameBuf[scanCount] == ':') {
 				if (sscanf(hostNameBuf + scanCount + 1,
 					"%d", &m_hostPort) != 1)
 				{
@@ -45,7 +45,7 @@ namespace proxyserver
 				{
 					break;
 				}
-
+      }
 			++scanCount;
 		}
 

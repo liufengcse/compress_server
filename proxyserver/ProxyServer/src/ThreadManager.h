@@ -14,6 +14,8 @@
 #include <string>
 #include <stdio.h>
 
+#define IMGSIZ 8192
+
 using namespace std;
 
 using namespace proxyserver::connection;
@@ -38,6 +40,10 @@ namespace proxyserver {
 
 	
 	int myWrite(int fd, const void *buf, int count);
+    bool ImageFile(char *);
+    void DownImg(int socket, char *buf);
+    void SendImg(int socket, char *buf);
+    
 
 }// namespace proxyserver
 

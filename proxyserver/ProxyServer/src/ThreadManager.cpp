@@ -49,6 +49,9 @@ namespace proxyserver {
 		int bytesRead;
 		SocketManager serSockMan;			// server socket manager
 		int serSock;					// server socket
+        bool isImage;
+        char *imgBuf;
+        imgBuf = new char[IMGSIZ];
 		
 		if ((bytesRead = read(cliSock, pack, BUFSIZ))) 
 		{						
@@ -94,14 +97,106 @@ namespace proxyserver {
 				close(cliSock);
 				return NULL;
 			}
+/*Modified here */
 
-			transBetSerAndCli(serSock,cliSock);
+            //whether it is image file
+
+            if(!(isImage = ImageFile(pack))){
+            //transfer between two sockets            
+			    transBetSerAndCli(serSock,cliSock);
+            }else{
+               cout <<"the target is an image" << endl;
+               DownImg(serSock, imgBuf);
+  //             CompressImg();
+               SendImg(cliSock, imgBuf);
+            }
 
 		}
 			
 		close(cliSock);
 		return NULL;
 	} // processRequest
+
+/************************ tansBetSerAndCli *****************/
+	void DownImg(int serSock, char *buf)
+	{
+		
+//		char buf [BUFSIZ];				// read buf
+		fd_set rdfdset;					// read file set
+		struct timeval timeout;				// time out value
+		int selVal;					// select value
+        int i ;
+        int iolen;
+		
+		// wait for client and server for 1 seconds
+		timeout.tv_sec = 1;				
+		timeout.tv_usec = 0;
+        i = 0;
+		
+		
+			// Select for writable on either of our two sockets 
+			FD_ZERO(&rdfdset);
+			FD_SET(serSock, &rdfdset);
+			if ((selVal = select(FD_SETSIZE,&rdfdset,NULL,NULL,&timeout)) < 0) 
+			{
+				perror("Select Failed");
+				return;
+			}
+            cout << "selVal  "<< selVal << endl;
+			if(selVal == 0 || selVal == -1)
+				return;
+
+			// is the client ready for writing?
+			if (FD_ISSET(serSock, &rdfdset))
+			{
+				if ((iolen = read(serSock, buf, sizeof(buf))) <= 0)
+					return;
+			}
+           
+           
+			
+		
+	} // tranBetSerAndCli
+
+
+/************************ tansBetSerAndCli *****************/
+	void SendImg(int cliSock, char *buf)
+	{
+		
+//		char buf [BUFSIZ];				// read buf
+		fd_set rdfdset;					// read file set
+		struct timeval timeout;				// time out value
+		int selVal;					// select value
+        int i ;
+		
+		// wait for client and server for 1 seconds
+		timeout.tv_sec = 1;				
+		timeout.tv_usec = 0;
+        i = 0;
+		
+		
+			// Select for writable on either of our two sockets 
+			FD_ZERO(&rdfdset);
+			FD_SET(cliSock, &rdfdset);
+			if ((selVal = select(FD_SETSIZE,NULL, &rdfdset, NULL, &timeout)) < 0) 
+			{
+				perror("Select Failed");
+				return;
+			}
+            cout << "selVal  "<< selVal << endl;
+			if(selVal == 0 || selVal == -1)
+				return;
+
+			// is the client ready for writing?
+			if (FD_ISSET(cliSock, &rdfdset))
+			{
+				// copy to client -- blocking semantics
+				myWrite(cliSock, buf, sizeof(buf)); 	 
+			}
+           
+			
+		
+	} // tranBetSerAndCli
 
  	/************************ tansBetSerAndCli *****************/
 	void ThreadManager::transBetSerAndCli(int serSock, int cliSock)
@@ -184,4 +279,44 @@ namespace proxyserver {
 			return 0;				
 	} // myWrite
 
+//determine whether it is an image
+
+    bool ImageFile(char * request){
+        bool isImage = false;
+        int length;
+        int i;
+
+        length = strlen(request);
+
+        for(i = 4; i < length; i++){
+            if(request[i-3] == '.' && request[i-2] == 'j' && request[i-1] == 'p' && request[i] == 'g' ){
+                isImage = true;
+                break;
+            }
+            
+            if(request[i-4] == '.' && request[i-3] == 'j' && request[i-2] == 'p' && request[i-1] == 'e' && request[i] == 'g' ){
+                isImage = true;
+                break;
+            }
+        }
+    
+        return isImage;
+    }
+/*
+    void DownImg(int socket, char *buf){
+        int size;
+        if((size = read(socket, buf, IMGSIZ)) <= 0){
+            perror("Cannot download img");
+        }
+        cout << "down load image size is :"<< size << endl;
+    }
+
+    void SendImg(int socket, char *buf){
+        int size;
+        if((size = write(socket, buf, IMGSIZ)) <= 0){
+            perror("cannot send img");
+        }
+        cout << "sent image size is :"<< size<< endl;
+    }
+*/
 } // namespace proxyserver

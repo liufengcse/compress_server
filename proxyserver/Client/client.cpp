@@ -191,13 +191,17 @@ int oneclient(char * host, int port , char * proxyname, int proxyport, char* pag
   size_t sz;
   string s1(page);
   sz = s1.size();
-  printf("number of file name charsi: %d", (int)sz);
-  s1.resize(sz-5);
-     
-  /*the filename is related to thread id and acess#, it will be used storage the fetched file*/
   pthread_t id = pthread_self();
+
+  /*the filename is related to thread id and acess#, it will be used storage the fetched file*/
+  if (s1.find("html") != string::npos) {
+    s1.resize(sz-5);
+    sprintf(filename, "%s_%u_%d.html", s1.c_str(), (unsigned int)id, acess);
+  } else if (s1.find("j") != string::npos) {
+    s1.resize(sz-4);
+    sprintf(filename, "%s_%u_%d.jpg", s1.c_str(), (unsigned int)id, acess);
+  } 
   
-  sprintf(filename, "%s_%u_%d.html", s1.c_str(), (unsigned int)id, acess);
   output = fopen(filename, "w");
   if(output == NULL){
     perror("cannot open file");

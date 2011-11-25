@@ -28,5 +28,5 @@ clean:
 server: server.cpp
 	${CC} $^ -o $@ -lpthread
 
-client: client.cpp
-	${CC} $^ -o $@ -lpthread
+test: server
+	./server 9000 10 1

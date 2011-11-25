@@ -15,7 +15,7 @@ TEST_IN_DIR = $(SRC_DIR)/Test
 TEST_OUT_DIR = ./Test
 SHELL_DIR = ./shell
 DOC_OUT_DIR = ./DOC_OUTPUT
-CC = g++ -O0 -g
+CC = g++ -O2 -g
 
 all : client
 
@@ -32,4 +32,4 @@ client : client.cpp
 	${CC} $^ -o $@ -lpthread
 
 test : client
-	./client localhost 9000 1 4 1 -proxy localhost 8000
+	./client localhost 9000 1 1 1 -proxy localhost 8000

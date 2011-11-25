@@ -39,7 +39,8 @@ namespace proxyserver {
 		
 		// create server socket
 		serSock = serSockMan.
-			makeServerSocket(m_serverPort); 			
+		makeServerSocket(m_serverPort); 			
+
 		if(serSock == -1)
 		{
 			fprintf(stderr,"Setup Server Socket Failed\n");

@@ -33,3 +33,4 @@ client : client.cpp
 
 test : client
 	./client localhost 9000 1 1 1 -proxy localhost 8000
+	#./client localhost 9000 1 1 1

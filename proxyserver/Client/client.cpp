@@ -59,7 +59,7 @@ int main(int argc, char** argv){
 
    ARG thread_args;
 
-   if(argc != 9 && argc != 5){
+   if(argc != 9 && argc != 6){
         printf("usage: ./web_client hostname port thread_num acess_num file_name -proxy proxyname proxyport\n");
         printf("    - hostname:port: server address and port\n");
         printf("    - thread_num: \n");
@@ -168,6 +168,7 @@ void * start_routine(void * arg){
         cout << mypage << endl;
        
         oneclient(info->host, info->port, info->proxyname, info->proxyport, mypage, i);
+
     }
     end = clock();
     
@@ -265,29 +266,34 @@ int oneclient(char * host, int port , char * proxyname, int proxyport, char* pag
   memset(buf, 0, sizeof(buf));
   int htmlstart = 0;
   char * htmlcontent;
+
   while((tmpres = recv(sock, buf, BUFSIZ, 0)) > 0){
+    printf("Recv: %d\n", tmpres);
+    fflush(stdout);
     total_size_recv = total_size_recv+tmpres;
-    if(htmlstart == 0)
-    {
+
+//    if(htmlstart == 0)
+//    {
       /* Under certain conditions this will not work.
       * If the \r\n\r\n part is splitted into two messages
       * it will fail to detect the beginning of HTML content
       */
 
 //     htmlcontent = strstr(buf, "\r\n\r\n");
-      htmlcontent = buf;
+//      htmlcontent = buf;
 
-      if(htmlcontent != NULL){
-        htmlstart = 1;
-        htmlcontent += 4;
-      }
-    }else{
+//      if(htmlcontent != NULL) {
+//        htmlstart = 1;
+//        htmlcontent += 4;
+//      }
+//    } else {
       htmlcontent = buf;
-    }
+//    }
 
-   if(htmlstart){
-      fprintf(output, htmlcontent);
-    }
+//    if(htmlstart){
+      //fprintf(output, htmlcontent);
+      printf(htmlcontent);
+//    }
  
     memset(buf, 0, tmpres);
   }

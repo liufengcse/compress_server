@@ -77,14 +77,12 @@ namespace proxyserver {
 			}
 
 			// connect to server
-			serSock = serSockMan.
-				makeClientSocket(firstHttpPack.getHostName().c_str(), 
-					firstHttpPack.getHostPort());
+			serSock = serSockMan.makeClientSocket(firstHttpPack.getHostName().c_str(), firstHttpPack.getHostPort());
+
 			if (serSock <= 0 && errno != EINTR) 
 			{
 				perror("Connect Server Error");
-				myWrite(cliSock, MS_CANNT_GET_MSG.c_str(),
-					MS_CANNT_GET_MSG.length());
+				myWrite(cliSock, MS_CANNT_GET_MSG.c_str(), MS_CANNT_GET_MSG.length());
 				close(cliSock);
 				return NULL;
 			}
@@ -101,15 +99,15 @@ namespace proxyserver {
 
             //whether it is image file
 
-            if(!(isImage = ImageFile(pack))){
+      if(!(isImage = ImageFile(pack))){
             //transfer between two sockets            
 			    transBetSerAndCli(serSock,cliSock);
-            }else{
-               cout <<"the target is an image" << endl;
-               DownImg(serSock, imgBuf);
-  //             CompressImg();
-               SendImg(cliSock, imgBuf);
-            }
+      }else{
+           cout <<"the target is an image" << endl;
+           DownImg(serSock, imgBuf);
+  //       CompressImg();
+           SendImg(cliSock, imgBuf);
+      }
 
 		}
 			
@@ -206,7 +204,8 @@ namespace proxyserver {
 		fd_set rdfdset;					// read file set
 		struct timeval timeout;				// time out value
 		int selVal;					// select value
-		
+	  int temp = 0;
+	
 		// wait for client and server for 1 seconds
 		timeout.tv_sec = 1;				
 		timeout.tv_usec = 0;
@@ -234,7 +233,7 @@ namespace proxyserver {
 					break; 			
 
 				// copy to host -- blocking semantics
-				myWrite(serSock, buf, iolen); 	 
+				myWrite(serSock, buf, iolen); 
 			}
 
 			// is the host sending data?
@@ -242,27 +241,37 @@ namespace proxyserver {
 			{
 				// zero length means the host disconnected
 				if ((iolen = read(serSock, buf, sizeof(buf))) <= 0)
-					break; 			 
+					break; 
 
 				// copy to client -- blocking semantics
+        while(temp != iolen) {
+          printf("%c", buf[temp]);
+          temp++;
+        }
+        temp = 0;
+printf("Send: %d\n", iolen);
+fflush(stdout);
+
 				myWrite(cliSock, buf, iolen); 	 
 			}
 		}
 	} // tranBetSerAndCli
 
-	int myWrite(int fd, const void *buf, int count)
-	{
+int myWrite(int fd, const void *buf, int count)
+{
 		int bytesWrite;					// bytes write
 		char *ptr = (char *)buf;			// write buffer pointer
+    int counter_temp = 0;
 
 		while((bytesWrite = write(fd,ptr,count))) 
 		{
+      counter_temp += bytesWrite;
 			// a critcal error happen
 			if((bytesWrite == -1) && (errno != EINTR))
 				break;
 			// all bytes has been writed
 			else if(bytesWrite == count)
-				break;	
+				break;
 			// part of the bytes has been writed, contiue to write
 			else if(bytesWrite > 0) 
 			{
@@ -271,13 +280,16 @@ namespace proxyserver {
 			}
 		}
 
+printf("Send confirm: %d\n", counter_temp);
+fflush(stdout);
+
 		if(bytesWrite == -1)
 			// write failure
 			return -1;						
 		else
 			// write success
 			return 0;				
-	} // myWrite
+} // myWrite
 
 //determine whether it is an image
 

@@ -116,17 +116,28 @@ int headmessage(FILE* cfp, char* extname){
 }
 
 //send the data of the file which the client want
-
 int sendmessage(int hSocket,char* serverfilepath){
 
     FILE* sfp,*cfp;
     int c;
+    int counter = 0;
 
     sfp=fopen(serverfilepath,"r");
+
+printf("File name: %s\n", serverfilepath);
+
     cfp=fdopen(hSocket,"w");
 
-    headmessage(cfp,get_ext(serverfilepath));
-    while((c=getc(sfp))!=EOF)putc(c,cfp);    
+    //headmessage(cfp,get_ext(serverfilepath));
+
+    while((c=getc(sfp)) != EOF) {
+      putc(c,cfp);
+      printf("%c", c);
+      counter++;
+    }
+     
+printf("How many bytes: %d\n", counter);
+
     fflush(cfp);
 
     return 0;
@@ -143,11 +154,11 @@ void getpath(char *requestline){
         if((requestline[j]=='/')&&(requestline[j+1]!='/')&&(requestline[j-1]!='/')){   
             mark=j;
             break;
-            }
-        }    
+        }
+    }    
     strcpy(newreqline, requestline+mark+1);
     strcpy(requestline, newreqline);
-    }
+}
 
 void process_cli(int hSocket,sockaddr_in client){
 
@@ -173,24 +184,24 @@ void process_cli(int hSocket,sockaddr_in client){
         if(fileExist(filepath)){
             if(fileSecurity(filepath)){
                 sendmessage(hSocket,filepath);
-                }
+            }
             else {
                 message_type=1;
                 ERR401(hSocket);
-                }
             }
+        }
         else {
             message_type=1;
             ERR404(hSocket);
-            }
-
         }
+
+    }
 
     if(close(hSocket)==-1){
         printf("\nCould not close socket\n");
         exit(1);
-        }     
-    }
+    }     
+}
 
 //invoked by pthread_create
 
@@ -207,7 +218,7 @@ void* start_routine(void* arg){
     t_thread=t_thread-1;
 
     pthread_exit(NULL);
-    }
+}
 
 int main(int argc,char* argv[]) {
     int hServerSocket,hSocket;
